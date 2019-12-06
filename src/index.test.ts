@@ -39,7 +39,9 @@ test("It should success", async () => {
   expect(result.success).toBe(true);
 
   // slack request
-  const data = JSON.parse(mock.history.post[0].data);
-  expect(data).toMatchSnapshot();
+  const { text } = JSON.parse(mock.history.post[0].data);
+  expect(text).toContain(body.sub);
+  expect(text).toContain(body.from);
+  expect(text).toContain(body.body);
   mock.reset();
 });
