@@ -41,7 +41,7 @@ export const handler: Mailless.LambdaHandler<
     });
     return callback(null, { success: true });
   } catch (error) {
-    console.error(error);
+    console.error(JSON.stringify(error, null, 2));
     return callback(
       JSON.stringify({
         statusCode: 500,
