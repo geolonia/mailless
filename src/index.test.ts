@@ -2,6 +2,7 @@ import mock from "../__test__/mocks/axios";
 import { promisifyLambdaTester as p } from "../__test__/utils";
 import { handler as receiveMail } from "./";
 import { Mailless } from "../index.d";
+
 const { SLACK_URL } = process.env as Mailless.Env;
 
 test("test of test", () => {
@@ -10,7 +11,7 @@ test("test of test", () => {
 
 test("It should fail if `sub` parameter is absent", async () => {
   const body = {
-    sub: undefined,
+    sub: void 0,
     from: "kamataryo@example.com",
     body: "This is a mail body!"
   };
@@ -38,6 +39,7 @@ test("It should success", async () => {
   expect(result.success).toBe(true);
 
   // slack request
-  const { text } = JSON.parse(mock.history.post[0].data);
-  expect(text).toMatchSnapshot();
+  const data = JSON.parse(mock.history.post[0].data);
+  expect(data).toMatchSnapshot();
+  mock.reset();
 });

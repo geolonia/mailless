@@ -2,7 +2,7 @@ import { Mailless } from "../index.d";
 import axios from "axios";
 import { formatMail } from "./utils";
 
-const { SLACK_URL } = process.env as Mailless.Env;
+const { SLACK_URL, SLACK_CHANNEL, SLACK_BOTNAME } = process.env as Mailless.Env;
 
 export const handler: Mailless.LambdaHandler<
   {},
@@ -33,9 +33,13 @@ export const handler: Mailless.LambdaHandler<
       headers: {
         "Content-Type": "application/json"
       },
-      data: { text: formatMail({ sub, from, body }) }
+      data: {
+        channel: SLACK_CHANNEL,
+        username: SLACK_BOTNAME,
+        text: formatMail({ sub, from, body })
+      }
     });
-    return callback(null, { success: true, message: "" });
+    return callback(null, { success: true });
   } catch (error) {
     console.error(error);
     return callback(

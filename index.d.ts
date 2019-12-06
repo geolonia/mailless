@@ -4,7 +4,11 @@ export declare namespace Mailless {
     body: Partial<T2>;
     triggerSource?: string;
   };
-  export type Env = { SLACK_URL: string };
+  export type Env = {
+    SLACK_URL: string;
+    SLACK_CHANNEL: string;
+    SLACK_BOTNAME: string;
+  };
 
   export type LambdaContext = any;
   export type LambdaCallback<T> = (error: string | null, result?: T) => any;
