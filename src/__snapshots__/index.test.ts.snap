@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`It should success 1`] = `
+"We've received an email!
+\`\`\`
+From: kamataryo@example.com
+Sub: Test sub
+body:
+This is a mail body!
+\`\`\`
+  "
+`;

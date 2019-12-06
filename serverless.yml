@@ -1,0 +1,62 @@
+service: mailless
+
+frameworkVersion: ">=1.41.1 <2.0.0"
+
+provider:
+  name: aws
+  runtime: nodejs10.x
+  memorySize: 256
+  region: us-east-1
+  stage: dev
+  environment:
+    SLACK_URL: ${env:SLACK_URL}
+
+package:
+  exclude:
+    - __test__
+    - .circleci/**
+    - .git/**
+    - bin/**
+    - src/**
+    - .*
+    - jest*
+    - tsconfig.*
+    - package-lock.json
+    - yarn.lock
+    - README.md
+
+functions:
+  send:
+    handler: dist/index.handler
+    events:
+      - http:
+          path: mail
+          method: post
+          cors:
+            origin: "*"
+            maxAge: 86400
+          integration: lambda
+          response:
+            statusCodes:
+              200:
+                pattern: ""
+              400:
+                pattern: '.*"statusCode" *: *400.*'
+                template: |
+                  #set ($obj = $util.parseJson($input.path('$.errorMessage')))
+                  { "message" : "$obj.body.message" }
+              403:
+                pattern: '.*"statusCode" *: *403.*'
+                template: |
+                  #set ($obj = $util.parseJson($input.path('$.errorMessage')))
+                  { "message" : "$obj.body.message" }
+              404:
+                pattern: '.*"statusCode" *: *404.*'
+                template: |
+                  #set ($obj = $util.parseJson($input.path('$.errorMessage')))
+                  { "message" : "$obj.body.message" }
+              500:
+                pattern: '.*"statusCode" *: *500.*'
+                template: |
+                  #set ($obj = $util.parseJson($input.path('$.errorMessage')))
+                  { "message" : "$obj.body.message" }

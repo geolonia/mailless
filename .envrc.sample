@@ -1,0 +1,3 @@
+export SLACK_URL="https://slack.example.com"
+export AWS_ACCESS_KEY_ID=xxxx
+export AWS_SECRET_ACCESS_KEY=xxxx
