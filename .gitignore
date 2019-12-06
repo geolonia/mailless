@@ -64,5 +64,5 @@ typings/
 .next
 
 ### project specific
-
 dist
+.serverless
