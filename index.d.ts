@@ -11,13 +11,11 @@ export declare namespace Mailless {
   };
 
   export type LambdaContext = any;
-  export type LambdaCallback<T> = (error: string | null, result?: T) => any;
 
   export type LambdaHandler<RequestPath, RequestBody, ResponseBody> = (
     event: LambdaEvent<RequestPath, RequestBody>,
-    context: LambdaContext,
-    callback: LambdaCallback<ResponseBody>
-  ) => ReturnType<LambdaCallback<ResponseBody>>;
+    context?: LambdaContext
+  ) => Promise<{ statusCode: number; headers?: any; body: string }>;
 
   export type Mail = {
     sub: string;

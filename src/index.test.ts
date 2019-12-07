@@ -1,5 +1,4 @@
 import mock from "../__test__/mocks/axios";
-import { promisifyLambdaTester as p } from "../__test__/utils";
 import { handler as receiveMail } from "./";
 import { Mailless } from "../index.d";
 
@@ -16,13 +15,8 @@ test("It should fail if `sub` parameter is absent", async () => {
     body: "This is a mail body!"
   };
 
-  let statusCode;
-  try {
-    await p(receiveMail)(body);
-  } catch (error) {
-    statusCode = 400;
-  }
-  expect(statusCode).toEqual(400);
+  const { statusCode } = await receiveMail({ body, path: {} });
+  expect(statusCode).toBe(400);
 });
 
 test("It should success", async () => {
@@ -35,11 +29,13 @@ test("It should success", async () => {
   };
 
   // client response
-  const result = await p(receiveMail)(body);
-  expect(result.success).toBe(true);
+  const { statusCode } = await receiveMail({ body, path: {} });
+  expect(statusCode).toBe(200);
 
   // slack request
-  const data = JSON.parse(mock.history.post[0].data);
-  expect(data).toMatchSnapshot();
+  const { text } = JSON.parse(mock.history.post[0].data);
+  expect(text).toContain(body.sub);
+  expect(text).toContain(body.from);
+  expect(text).toContain(body.body);
   mock.reset();
 });
