@@ -8,22 +8,19 @@ export const handler: Mailless.LambdaHandler<
   {},
   Mailless.Mail,
   Mailless.Status
-> = async (event, _1, callback) => {
+> = async (event, _1) => {
   const { sub, from, body } = event.body;
   if (
     typeof sub === "undefined" ||
     typeof from === "undefined" ||
     typeof body === "undefined"
   ) {
-    return callback(
-      JSON.stringify({
-        statusCode: 400,
-        body: {
-          message:
-            "All of the parameters `sub`, `from` and `body` are required."
-        }
+    return {
+      statusCode: 400,
+      body: JSON.stringify({
+        message: "All of the parameters `sub`, `from` and `body` are required."
       })
-    );
+    };
   }
 
   try {
@@ -39,16 +36,17 @@ export const handler: Mailless.LambdaHandler<
         text: formatMail({ sub, from, body })
       }
     });
-    return callback(null, { success: true });
+    return {
+      statusCode: 200,
+      body: JSON.stringify({ success: true })
+    };
   } catch (error) {
     console.error(JSON.stringify(error, null, 2));
-    return callback(
-      JSON.stringify({
-        statusCode: 500,
-        body: {
-          message: "Oops, something is wrong. We are fixing the problem now."
-        }
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        message: "Oops, something is wrong. We are fixing the problem now."
       })
-    );
+    };
   }
 };
